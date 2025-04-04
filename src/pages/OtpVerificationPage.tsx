@@ -88,10 +88,6 @@ export default function OtpVerificationPage() {
         Resend OTP
       </Button>
 
-      <Button color="secondary" fullWidth onClick={() => navigate("/signup")}>
-        Back to Signup
-      </Button>
-
       <Snackbar open={!!successMessage} autoHideDuration={3000} onClose={() => setSuccessMessage(null)}>
         <Alert severity="success">{successMessage}</Alert>
       </Snackbar>

@@ -17,6 +17,7 @@ const HomePage = () => {
   const accessibleRoutes = [
     { path: "/Changepassword", label: "Change Password" },
     { path: "/profile", label: "Profile" },
+    { path: "/admin", label: "admin" },
   ];
 
   return (

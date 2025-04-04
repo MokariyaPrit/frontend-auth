@@ -1,52 +1,38 @@
-// frontend-auth/src/pages/SignupPage.tsx
 import { useState } from "react";
-import {
-  Container,
-  TextField,
-  Button,
-  Typography,
-  Box,
-  Paper,
-  Avatar,
-  IconButton,
-} from "@mui/material";
+import { TextField, Button, Typography, Box, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-// import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import backgroundImage from "../assets/image.png"; // Import your background image
+import SignupIllustration from "../components/SignupIllustration"; // Import the illustration component
 
 export default function SignupPage() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [first_name, setfirst_name] = useState("");
+  const [lastname, setLastname] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSignup = async () => {
     // Validation
-    if (!firstName) {
-      setError("First name is required.");
+    if (!first_name) {
+      setError("Full name is required.");
       return;
     }
-    if (firstName.length < 2) {
-      setError("First name must be at least 2 characters.");
+    if (first_name.length < 2) {
+      setError("Full name must be at least 2 characters.");
       return;
     }
-    if (!lastName) {
-      setError("Last name is required.");
-      return;
-    }
-    if (lastName.length < 2) {
-      setError("Last name must be at least 2 characters.");
-      return;
-    }
-    if (!mobileNo) {
-      setError("Mobile number is required.");
+    if (!lastname) {
+      setError("Organization name is required.");
       return;
     }
     if (!email) {
       setError("Email is required.");
+      return;
+    }
+    if (!mobileNo) {
+      setError("Mobile number is required.");
       return;
     }
     if (!password) {
@@ -61,14 +47,14 @@ export default function SignupPage() {
       return;
     }
 
-    // Mobile number validation (basic, adjust as needed)
-    const mobileRegex = /^[0-9]{10}$/; // Assumes 10-digit mobile number
+    // Mobile number validation (basic, assumes 10-digit mobile number)
+    const mobileRegex = /^[0-9]{10}$/;
     if (!mobileRegex.test(mobileNo)) {
       setError("Invalid mobile number format. Must be 10 digits.");
       return;
     }
 
-    // Password validation (basic, adjust as needed)
+    // Password validation
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
@@ -79,107 +65,168 @@ export default function SignupPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          first_name: firstName,
-          last_name: lastName,
+          first_name: first_name.split(" ")[0] || "",
+          last_name:  lastname.split(" ")[0] || "",
           mobile_no: `+91${mobileNo}`,
           email,
           password,
+          userName:username,
+          role:'user'
         }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        sessionStorage.setItem("userEmail", email); // ✅ Store email for OTP verification
-
+        sessionStorage.setItem("userEmail", email);
         alert("Signup successful! Please verify your email.");
-
-        // ✅ Redirect to OTP verification page
         navigate("/otp-verification");
       } else {
         setError(data.message || "Signup failed. Try again.");
       }
     } catch (error) {
-      console.error("Signup Error:", error); // ✅ Log for debugging
-      setError("Something went wrong. Please check your network and try again.");
+      console.error("Signup Error:", error);
+      setError(
+        "Something went wrong. Please check your network and try again."
+      );
     }
   };
 
   return (
     <Box
       sx={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
         minHeight: "100vh",
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        flexDirection: { xs: "column", md: "row" }, // Stack on mobile, side-by-side on desktop
+        bgcolor: "background.default",
       }}
     >
-      <Paper elevation={3} sx={{ padding: 4, maxWidth: 400, borderRadius: 2 }}>
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            {/* <PersonAddIcon /> */}
-          </Avatar>
-          <Typography component="h1" variant="h5">
+      {/* Left Side: Form */}
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          p: { xs: 3, md: 5 }, // Increased padding
+          bgcolor: "#fff",
+        }}
+      >
+        <Box sx={{ maxWidth: 600, width: "100%" }}>
+          {" "}
+          {/* Increased maxWidth from 500 to 600 */}
+          <Typography variant="h4" fontWeight="bold" gutterBottom>
+            Create Account
+          </Typography>
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            gutterBottom
+            sx={{ mb: 4 }}
+          >
+            Create a great platform for managing your cases & clients
+          </Typography>
+          {error && (
+            <Typography color="error" sx={{ mt: 2, mb: 2 }}>
+              {error}
+            </Typography>
+          )}
+          <Box sx={{ display: "flex", gap: 3, mb: 3 }}>
+            {" "}
+            {/* Increased gap */}
+            <TextField
+              fullWidth
+              label="first Name *"
+              value={first_name}
+              onChange={(e) => setfirst_name(e.target.value)}
+              variant="outlined"
+              size="medium"
+            />
+            <TextField
+              fullWidth
+              label="Last Name *"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+              variant="outlined"
+              size="medium"
+            />
+          </Box>
+          <Box sx={{ display: "flex", gap: 3, mb: 3 }}>
+            <TextField
+              fullWidth
+              label="User name *"
+              value={username}
+              onChange={(e) => setusername(e.target.value)}
+              variant="outlined"
+              size="medium"
+            />
+            <TextField
+              fullWidth
+              label="Mobile Number *"
+              value={mobileNo}
+              onChange={(e) => setMobileNo(e.target.value)}
+              variant="outlined"
+              size="medium"
+            />
+          </Box>
+          <TextField
+            fullWidth
+            label="Email Address *"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            variant="outlined"
+            size="medium"
+            sx={{ mb: 4 }}
+          />
+          <TextField
+            fullWidth
+            label="Password *"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            variant="outlined"
+            size="medium"
+            sx={{ mb: 4 }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={handleSignup}
+            sx={{ py: 1.5, fontSize: "1.1rem", mb: 3 }}
+          >
             Sign Up
+          </Button>
+          <Typography variant="body2" align="center">
+            Already a member?{" "}
+            <Link
+              component="button"
+              onClick={() => navigate("/login")}
+              sx={{
+                color: "primary.main",
+                textDecoration: "none",
+                fontWeight: "bold",
+              }}
+            >
+              Login
+            </Link>
           </Typography>
         </Box>
-        {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
-        <TextField
-          fullWidth
-          label="First Name"
-          margin="normal"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-        <TextField
-          fullWidth
-          label="Last Name"
-          margin="normal"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-        <TextField
-          fullWidth
-          label="Mobile No"
-          margin="normal"
-          value={mobileNo}
-          onChange={(e) => setMobileNo(e.target.value)}
-        />
-        <TextField
-          fullWidth
-          label="Email"
-          margin="normal"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          fullWidth
-          label="Password"
-          type="password"
-          margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={handleSignup}
-          sx={{ mt: 2 }}
-        >
-          Sign Up
-        </Button>
-        <Button
-          color="secondary"
-          fullWidth
-          onClick={() => navigate("/login")}
-          sx={{ mt: 2 }}
-        >
-          Go to Login
-        </Button>
-      </Paper>
+      </Box>
+      {/* // Right Side: Illustration */}
+      <Box
+        sx={{
+          flex: 1,
+          display: { xs: "none", md: "flex" }, // Hide on mobile
+          justifyContent: "center",
+          alignItems: "center",
+          bgcolor: "#e3f2fd", // Light blue background
+          p: 6,
+        }}
+      >
+        <SignupIllustration width="80%" />
+      </Box>
     </Box>
   );
 }
