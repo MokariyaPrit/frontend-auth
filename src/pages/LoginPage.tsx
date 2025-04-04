@@ -1,13 +1,7 @@
 import { useState, useEffect } from "react";
-import {
-  TextField,
-  Button,
-  Typography,
-  Box,
-  Link,
-} from "@mui/material";
+import { TextField, Button, Typography, Box, Link, alpha } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import SignupIllustration from "../components/SignupIllustration"; // Reuse the illustration component
+import SignupIllustration from "../components/SignupIllustration";
 
 interface LoginPageProps {
   setAuth: (isAuth: boolean) => void;
@@ -27,12 +21,8 @@ export default function LoginPage({ setAuth }: LoginPageProps) {
   }, [setAuth, navigate]);
 
   const handleLogin = async () => {
-    setError(""); // Clear previous errors
+    setError("");
 
-
-    
-
-    // Basic validation
     if (!email) {
       setError("Email is required.");
       return;
@@ -42,7 +32,6 @@ export default function LoginPage({ setAuth }: LoginPageProps) {
       return;
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError("Invalid email format.");
@@ -64,7 +53,7 @@ export default function LoginPage({ setAuth }: LoginPageProps) {
       } else {
         setError(data.message || "Login failed. Try again.");
       }
-    } catch (error) {
+    } catch {
       setError("Something went wrong. Please try again.");
     }
   };
@@ -74,7 +63,7 @@ export default function LoginPage({ setAuth }: LoginPageProps) {
       sx={{
         minHeight: "100vh",
         display: "flex",
-        flexDirection: { xs: "column", md: "row" }, // Stack on mobile, side-by-side on desktop
+        flexDirection: { xs: "column", md: "row" },
         bgcolor: "background.default",
       }}
     >
@@ -82,11 +71,11 @@ export default function LoginPage({ setAuth }: LoginPageProps) {
       <Box
         sx={{
           flex: 1,
-          display: { xs: "none", md: "flex" }, // Hide on mobile
+          display: { xs: "none", md: "flex" },
           justifyContent: "center",
           alignItems: "center",
-          bgcolor: "#e3f2fd", // Light blue background
-          p: 6,
+          bgcolor: alpha('#2563eb', 0.1), // Subtle blue tint
+          p: 4,
         }}
       >
         <SignupIllustration width="80%" />
@@ -101,38 +90,35 @@ export default function LoginPage({ setAuth }: LoginPageProps) {
           justifyContent: "center",
           alignItems: "center",
           p: { xs: 3, md: 6 },
-          bgcolor: "#fff",
         }}
       >
-        <Box sx={{ maxWidth: 600, width: "100%" }}>
+        <Box sx={{ maxWidth: 400, width: "100%" }}>
           <Typography variant="h4" fontWeight="bold" gutterBottom>
             Login
           </Typography>
-          <Typography variant="body1" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
             Access your platform for managing cases & clients
           </Typography>
           {error && (
-            <Typography color="error" sx={{ mt: 2, mb: 2 }}>
+            <Typography variant="body2" color="error" sx={{ mb: 2 }}>
               {error}
             </Typography>
           )}
           <TextField
             fullWidth
-            label="Email Address *"
+            label="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             variant="outlined"
-            size="medium"
             sx={{ mb: 3 }}
           />
           <TextField
             fullWidth
-            label="Password *"
+            label="Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             variant="outlined"
-            size="medium"
             sx={{ mb: 4 }}
           />
           <Button
@@ -140,7 +126,7 @@ export default function LoginPage({ setAuth }: LoginPageProps) {
             color="primary"
             fullWidth
             onClick={handleLogin}
-            sx={{ py: 1.5, fontSize: "1.1rem", mb: 3 }}
+            sx={{ py: 1.5, mb: 3 }}
           >
             Login
           </Button>
@@ -148,7 +134,7 @@ export default function LoginPage({ setAuth }: LoginPageProps) {
             <Link
               component="button"
               onClick={() => navigate("/forgot-password")}
-              sx={{ color: "primary.main", textDecoration: "none", fontWeight: "bold" }}
+              sx={{ color: "primary.main", fontWeight: "bold" }}
             >
               Forgot Password?
             </Link>
@@ -158,7 +144,7 @@ export default function LoginPage({ setAuth }: LoginPageProps) {
             <Link
               component="button"
               onClick={() => navigate("/signup")}
-              sx={{ color: "primary.main", textDecoration: "none", fontWeight: "bold" }}
+              sx={{ color: "primary.main", fontWeight: "bold" }}
             >
               Sign Up
             </Link>

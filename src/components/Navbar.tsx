@@ -7,11 +7,15 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import HomeIcon from "@mui/icons-material/Home";
+import MenuIcon from "@mui/icons-material/Menu";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface NavbarProps {
   isAuth: boolean;
@@ -20,11 +24,14 @@ interface NavbarProps {
 
 export default function Navbar({ isAuth, setAuth }: NavbarProps) {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [mobileMenuEl, setMobileMenuEl] = useState<null | HTMLElement>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const open = Boolean(anchorEl);
+  const mobileOpen = Boolean(mobileMenuEl);
 
-  // Check if the user is an admin
   useEffect(() => {
     const userEmail = sessionStorage.getItem("userEmail");
     if (userEmail) {
@@ -47,8 +54,13 @@ export default function Navbar({ isAuth, setAuth }: NavbarProps) {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleMobileMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setMobileMenuEl(event.currentTarget);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
+    setMobileMenuEl(null);
   };
 
   const handleLogout = async () => {
@@ -97,7 +109,8 @@ export default function Navbar({ isAuth, setAuth }: NavbarProps) {
           My App
         </Typography>
         {isAuth ? (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box>
+            <ThemeToggle />
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -117,43 +130,33 @@ export default function Navbar({ isAuth, setAuth }: NavbarProps) {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                  navigate("/profile");
-                }}
-              >
-                Profile
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                  navigate("/changepassword");
-                }}
-              >
-                Change Password
-              </MenuItem>
-              {isAdmin && (
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    navigate("/admin");
-                  }}
-                >
-                  Admin Dashboard
-                </MenuItem>
-              )}
+              <MenuItem onClick={() => { handleClose(); navigate("/profile"); }}>Profile</MenuItem>
+              
+              <MenuItem onClick={() => { handleClose(); navigate("/changepassword"); }}>Change Password</MenuItem>
+              {isAdmin && <MenuItem onClick={() => { handleClose(); navigate("/admin"); }}>Admin Dashboard</MenuItem>}
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </Box>
+        ) : isMobile ? (
+          <Box>
+            <IconButton size="large" color="inherit" onClick={handleMobileMenu}>
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={mobileMenuEl}
+              open={mobileOpen}
+              onClose={handleClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              <MenuItem onClick={() => { handleClose(); navigate("/login"); }}>Login</MenuItem>
+              <MenuItem onClick={() => { handleClose(); navigate("/signup"); }}>Signup</MenuItem>
             </Menu>
           </Box>
         ) : (
           <Box>
-            <Button color="inherit" onClick={() => navigate("/login")}>
-              Login
-            </Button>
-            <Button color="inherit" onClick={() => navigate("/signup")}>
-              Signup
-            </Button>
+            <Button color="inherit" onClick={() => navigate("/login")}>Login</Button>
+            <Button color="inherit" onClick={() => navigate("/signup")}>Signup</Button>
           </Box>
         )}
       </Toolbar>

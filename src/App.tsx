@@ -1,8 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { CssBaseline, Box } from "@mui/material";
-import { ThemeProvider } from "@mui/material/styles";
-import theme from "./theme/theme.ts";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import OtpVerificationPage from "./pages/OtpVerificationPage";
@@ -13,12 +11,13 @@ import Changepassword from "./pages/Changepassword.tsx";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import AdminPage from "./pages/AdminPage.tsx"; // Import AdminPage
+import ThemeProvider from "./components/ThemeProvider.tsx";
 
 export default function App() {
   const [isAuth, setIsAuth] = useState<boolean>(false);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider>
       <CssBaseline />
       {isAuth && <Navbar isAuth={isAuth} setAuth={setIsAuth} />}
       <Box

@@ -1,30 +1,37 @@
 import { useState } from "react";
 import { TextField, Button, Typography, Box, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import SignupIllustration from "../components/SignupIllustration"; // Import the illustration component
+import { alpha } from '@mui/material/styles';
+import SignupIllustration from "../components/SignupIllustration";
 
 export default function SignupPage() {
-  const [first_name, setfirst_name] = useState("");
-  const [lastname, setLastname] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const [email, setEmail] = useState("");
-  const [username, setusername] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSignup = async () => {
+    setError("");
+
     // Validation
-    if (!first_name) {
-      setError("Full name is required.");
+    if (!firstName) {
+      setError("First name is required.");
       return;
     }
-    if (first_name.length < 2) {
-      setError("Full name must be at least 2 characters.");
+    if (firstName.length < 2) {
+      setError("First name must be at least 2 characters.");
       return;
     }
-    if (!lastname) {
-      setError("Organization name is required.");
+    if (!lastName) {
+      setError("Last name is required.");
+      return;
+    }
+    if (!username) {
+      setError("Username is required.");
       return;
     }
     if (!email) {
@@ -40,21 +47,18 @@ export default function SignupPage() {
       return;
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError("Invalid email format.");
       return;
     }
 
-    // Mobile number validation (basic, assumes 10-digit mobile number)
     const mobileRegex = /^[0-9]{10}$/;
     if (!mobileRegex.test(mobileNo)) {
       setError("Invalid mobile number format. Must be 10 digits.");
       return;
     }
 
-    // Password validation
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
@@ -65,13 +69,12 @@ export default function SignupPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          first_name: first_name.split(" ")[0] || "",
-          last_name:  lastname.split(" ")[0] || "",
+          first_name: firstName,
+          last_name: lastName,
           mobile_no: `+91${mobileNo}`,
           email,
           password,
-          userName:username,
-          role:'user'
+          userName: username,
         }),
       });
 
@@ -86,9 +89,7 @@ export default function SignupPage() {
       }
     } catch (error) {
       console.error("Signup Error:", error);
-      setError(
-        "Something went wrong. Please check your network and try again."
-      );
+      setError("Something went wrong. Please try again.");
     }
   };
 
@@ -97,7 +98,7 @@ export default function SignupPage() {
       sx={{
         minHeight: "100vh",
         display: "flex",
-        flexDirection: { xs: "column", md: "row" }, // Stack on mobile, side-by-side on desktop
+        flexDirection: { xs: "column", md: "row" },
         bgcolor: "background.default",
       }}
     >
@@ -109,84 +110,68 @@ export default function SignupPage() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          p: { xs: 3, md: 5 }, // Increased padding
-          bgcolor: "#fff",
+          p: { xs: 3, md: 6 },
         }}
       >
-        <Box sx={{ maxWidth: 600, width: "100%" }}>
-          {" "}
-          {/* Increased maxWidth from 500 to 600 */}
+        <Box sx={{ maxWidth: 400, width: "100%" }}>
           <Typography variant="h4" fontWeight="bold" gutterBottom>
             Create Account
           </Typography>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            gutterBottom
-            sx={{ mb: 4 }}
-          >
-            Create a great platform for managing your cases & clients
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+            Build your platform for managing cases & clients
           </Typography>
           {error && (
-            <Typography color="error" sx={{ mt: 2, mb: 2 }}>
+            <Typography variant="body2" color="error" sx={{ mb: 2 }}>
               {error}
             </Typography>
           )}
-          <Box sx={{ display: "flex", gap: 3, mb: 3 }}>
-            {" "}
-            {/* Increased gap */}
+          <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
             <TextField
               fullWidth
-              label="first Name *"
-              value={first_name}
-              onChange={(e) => setfirst_name(e.target.value)}
+              label="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               variant="outlined"
-              size="medium"
             />
             <TextField
               fullWidth
-              label="Last Name *"
-              value={lastname}
-              onChange={(e) => setLastname(e.target.value)}
+              label="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
               variant="outlined"
-              size="medium"
             />
           </Box>
-          <Box sx={{ display: "flex", gap: 3, mb: 3 }}>
+          <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
             <TextField
               fullWidth
-              label="User name *"
+              label="Username"
               value={username}
-              onChange={(e) => setusername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               variant="outlined"
-              size="medium"
             />
             <TextField
               fullWidth
-              label="Mobile Number *"
+              label="Mobile Number"
               value={mobileNo}
               onChange={(e) => setMobileNo(e.target.value)}
               variant="outlined"
-              size="medium"
             />
           </Box>
           <TextField
             fullWidth
-            label="Email Address *"
+            label="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             variant="outlined"
-            size="medium"
-            sx={{ mb: 4 }}
+            sx={{ mb: 3 }}
           />
           <TextField
             fullWidth
-            label="Password *"
+            label="Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             variant="outlined"
-            size="medium"
             sx={{ mb: 4 }}
           />
           <Button
@@ -194,7 +179,7 @@ export default function SignupPage() {
             color="primary"
             fullWidth
             onClick={handleSignup}
-            sx={{ py: 1.5, fontSize: "1.1rem", mb: 3 }}
+            sx={{ py: 1.5, mb: 3 }}
           >
             Sign Up
           </Button>
@@ -203,26 +188,23 @@ export default function SignupPage() {
             <Link
               component="button"
               onClick={() => navigate("/login")}
-              sx={{
-                color: "primary.main",
-                textDecoration: "none",
-                fontWeight: "bold",
-              }}
+              sx={{ color: "primary.main", fontWeight: "bold" }}
             >
               Login
             </Link>
           </Typography>
         </Box>
       </Box>
-      {/* // Right Side: Illustration */}
+
+      {/* Right Side: Illustration */}
       <Box
         sx={{
           flex: 1,
-          display: { xs: "none", md: "flex" }, // Hide on mobile
+          display: { xs: "none", md: "flex" },
           justifyContent: "center",
           alignItems: "center",
-          bgcolor: "#e3f2fd", // Light blue background
-          p: 6,
+          bgcolor: alpha('#2563eb', 0.1), // Subtle blue tint matching LoginPage
+          p: 4,
         }}
       >
         <SignupIllustration width="80%" />
