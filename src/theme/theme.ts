@@ -45,7 +45,7 @@ const ERROR = {
 };
 
 // Create theme settings based on mode (light/dark)
-const getDesignTokens = (mode: PaletteMode) => ({
+const getDesignTokens = (mode: PaletteMode):any => ({
   palette: {
     mode,
     ...(mode === 'light'

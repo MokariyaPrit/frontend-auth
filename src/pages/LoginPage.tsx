@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { TextField, Button, Typography, Box, Link, alpha } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import SignupIllustration from "../components/SignupIllustration";
+// import SignupIllustration from "../components/SignupIllustration";
+import Loginimg from "../components/Loginimg";
 
 interface LoginPageProps {
   setAuth: (isAuth: boolean) => void;
@@ -78,7 +79,7 @@ export default function LoginPage({ setAuth }: LoginPageProps) {
           p: 4,
         }}
       >
-        <SignupIllustration width="80%" />
+        <Loginimg width="80%"/>
       </Box>
 
       {/* Right Side: Form */}
